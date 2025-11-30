@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    
+    <!-- NuGet Package Properties -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>dto-to-dart</ToolCommandName>
+    <PackageId>DtoToDartGenerator</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Your Name</Authors>
+    <Company>Your Company</Company>
+    <Description>A tool to generate Dart data classes from .NET DTOs with JSON serialization support</Description>
+    <PackageTags>dart;dto;generator;code-generation;dotnet-tool</PackageTags>
+    <PackageProjectUrl>https://github.com/Ptigroo/PocketLawyer</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Ptigroo/PocketLawyer</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <DevelopmentDependency>true</DevelopmentDependency>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="dto-to-dart.config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <!-- Include MSBuild targets file in the package -->
+    <None Include="build\DtoToDartGenerator.targets" Pack="true" PackagePath="build\" />
+  </ItemGroup>
+
+</Project>
