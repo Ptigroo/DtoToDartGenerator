@@ -7,20 +7,23 @@
     <Nullable>enable</Nullable>
     
     <!-- NuGet Package Properties -->
-    <PackAsTool>true</PackAsTool>
-    <ToolCommandName>dto-to-dart</ToolCommandName>
     <PackageId>DtoToDartGenerator</PackageId>
-    <Version>1.0.0</Version>
-    <Authors>Your Name</Authors>
-    <Company>Your Company</Company>
-    <Description>A tool to generate Dart data classes from .NET DTOs with JSON serialization support</Description>
-    <PackageTags>dart;dto;generator;code-generation;dotnet-tool</PackageTags>
+    <Version>1.0.1</Version>
+    <Authors>Gaspard de Villenfagne</Authors>
+    <Company>Ptigroo</Company>
+    <Description>Automatically generates Dart data classes from .NET DTOs with JSON serialization support. Integrates with MSBuild to generate Dart files on every build.</Description>
+    <PackageTags>dart;dto;generator;code-generation;msbuild</PackageTags>
     <PackageProjectUrl>https://github.com/Ptigroo/PocketLawyer</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Ptigroo/PocketLawyer</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <DevelopmentDependency>true</DevelopmentDependency>
+    
+    <!-- Package as build tool, not runtime dependency -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,6 +38,12 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
     <!-- Include MSBuild targets file in the package -->
     <None Include="build\DtoToDartGenerator.targets" Pack="true" PackagePath="build\" />
+    <!-- Explicitly create a lib folder with placeholder to indicate no compile-time dependencies -->
+    <None Include="build\_._" Pack="true" PackagePath="lib\netstandard2.0\" />
+    <!-- Include the tool executable in the tools folder -->
+    <None Include="$(OutputPath)DtoToDartGenerator.dll" Pack="true" PackagePath="tools\net10.0\" />
+    <None Include="$(OutputPath)DtoToDartGenerator.runtimeconfig.json" Pack="true" PackagePath="tools\net10.0\" />
+    <None Include="$(OutputPath)DtoToDartGenerator.deps.json" Pack="true" PackagePath="tools\net10.0\" />
   </ItemGroup>
 
 </Project>

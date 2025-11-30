@@ -9,20 +9,20 @@ A .NET tool that automatically generates Dart data classes from .NET DTOs with J
 dotnet tool install -g DtoToDartGenerator
 ```
 
-### 2. Add to your DTO project
+### 2. Add to your DTO class library
 ```bash
 dotnet add package DtoToDartGenerator
 ```
 
-**That's it!** Dart files will be automatically generated after each build to the `generated_dart` folder.
+Dart files will be automatically generated after each build to the `generated_dart` folder.
 
-## Customization
+## Customization preferred
 
-Customize the output directory in your `.csproj`:
+Customize the output directory in your `.csproj` using relative path vy adding  <DartOutputDir> in your propertyGroup:
 
 ```xml
 <PropertyGroup>
-  <DartOutputDir>../flutter_app/lib/models</DartOutputDir>
+    <DartOutputDir>..\..\..\search_engine_front\lib\models</DartOutputDir>
 </PropertyGroup>
 ```
 
@@ -33,41 +33,6 @@ Disable auto-generation:
   <GenerateDartOnBuild>false</GenerateDartOnBuild>
 </PropertyGroup>
 ```
-
-## Manual Usage
-
-Run the tool manually from command line:
-
-```bash
-# From DLL
-dto-to-dart path/to/your.dll ./output
-
-# From .csproj (will build first)
-dto-to-dart YourProject.csproj ./output
-```
-
-Or use a config file `dto-to-dart.config.json`:
-
-```json
-{
-  "assemblyPath": "bin/Debug/net10.0/YourProject.dll",
-  "outputDir": "generated_dart"
-}
-```
-
-Then run:
-```bash
-dto-to-dart
-```
-
-## Features
-
-- ✅ Automatic generation on build (when installed as package reference)
-- ✅ Generates Dart classes from C# DTOs
-- ✅ Includes `toJson()` and `fromJson()` methods
-- ✅ Supports primitive types, nullable types, and collections
-- ✅ Snake_case file naming
-- ✅ CamelCase property naming
 
 ## Example
 

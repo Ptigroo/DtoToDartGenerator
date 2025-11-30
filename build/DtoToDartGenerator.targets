@@ -4,6 +4,8 @@
     <DartOutputDir Condition="'$(DartOutputDir)' == ''">$(MSBuildProjectDirectory)\generated_dart</DartOutputDir>
     <!-- Allow users to disable auto-generation -->
     <GenerateDartOnBuild Condition="'$(GenerateDartOnBuild)' == ''">true</GenerateDartOnBuild>
+    <!-- Path to the tool executable in the NuGet package -->
+    <DtoToDartGeneratorExe Condition="'$(DtoToDartGeneratorExe)' == ''">$(MSBuildThisFileDirectory)..\tools\net10.0\DtoToDartGenerator.dll</DtoToDartGeneratorExe>
   </PropertyGroup>
 
   <Target Name="GenerateDartFromDTOs" 
@@ -12,8 +14,8 @@
     
     <Message Text="Running DTO-&gt;Dart generator for $(TargetPath)" Importance="High" />
     
-    <!-- Run the global tool -->
-    <Exec Command="dto-to-dart &quot;$(TargetPath)&quot; &quot;$(DartOutputDir)&quot;" 
+    <!-- Run the packaged tool -->
+    <Exec Command="dotnet &quot;$(DtoToDartGeneratorExe)&quot; &quot;$(TargetPath)&quot; &quot;$(DartOutputDir)&quot;" 
           ContinueOnError="false"
           IgnoreExitCode="false" />
     

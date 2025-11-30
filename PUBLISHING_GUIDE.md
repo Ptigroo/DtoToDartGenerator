@@ -4,9 +4,9 @@
 
 ### 1. **DtoToDartGenerator.csproj** - Updated
    - Added NuGet package metadata
-   - Set `PackAsTool=true` for global tool installation
    - Included MSBuild targets file in package
    - Added `DevelopmentDependency=true`
+   - Packaged as MSBuild-integrated tool (not global tool)
 
 ### 2. **build/DtoToDartGenerator.targets** - New
    - Automatic MSBuild integration
@@ -43,7 +43,6 @@
    ```bash
    cd DtoToDartGenerator
    dotnet pack -c Release
-   dotnet tool install -g --add-source ./bin/Release DtoToDartGenerator
    ```
 
 3. **Test in a sample project:**
@@ -82,24 +81,19 @@
 
 ### For End Users:
 
-1. **Install global tool (one time):**
-   ```bash
-   dotnet tool install -g DtoToDartGenerator
-   ```
-
-2. **Add to their DTO project:**
+1. **Add to their DTO project:**
    ```bash
    dotnet add package DtoToDartGenerator
    ```
 
-3. **Optional: Customize in .csproj:**
+2. **Optional: Customize in .csproj:**
    ```xml
    <PropertyGroup>
      <DartOutputDir>../flutter_app/lib/models</DartOutputDir>
    </PropertyGroup>
    ```
 
-4. **Build and done!**
+3. **Build and done!**
    ```bash
    dotnet build
    ```
@@ -110,6 +104,7 @@
 - ? **Zero configuration** - Works out of the box with sensible defaults
 - ? **Customizable** - Easy property overrides
 - ? **Clean** - Development dependency, doesn't pollute runtime deps
+- ? **Automatic** - Runs on every build via MSBuild integration
 
 ## ?? Version Management
 
@@ -126,7 +121,7 @@ Consider semantic versioning:
 
 ## ?? Next Steps
 
-1. Update author info in `.csproj`
+1. Update author info in `.csproj` ? (Already done)
 2. Test locally
 3. Create NuGet.org account
 4. Publish version 1.0.0
