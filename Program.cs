@@ -72,7 +72,7 @@ namespace DtoToDartGenerator
             {
                 var projPath = dllArg;
                 Console.WriteLine("Building project: " + projPath);
-                var psi = new ProcessStartInfo("dotnet", "build \"" + projPath + "\" -c Debug -f net10.0")
+                var psi = new ProcessStartInfo("dotnet", "build \"" + projPath + "\" -c Debug")
                 {
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -95,14 +95,20 @@ namespace DtoToDartGenerator
                 }
 
                 var projDir = Path.GetDirectoryName(Path.GetFullPath(projPath)) ?? Directory.GetCurrentDirectory();
-                var candidateDir = Path.Combine(projDir, "bin", "Debug", "net10.0");
-                if (Directory.Exists(candidateDir))
+                var binDebug = Path.Combine(projDir, "bin", "Debug");
+                if (Directory.Exists(binDebug))
                 {
-                    var dlls = Directory.GetFiles(candidateDir, "*.dll");
-                    if (dlls.Length > 0)
+                    // Find the most recent framework folder
+                    var fxDirs = Directory.GetDirectories(binDebug, "net*");
+                    if (fxDirs.Length > 0)
                     {
-                        dllArg = dlls[0];
-                        Console.WriteLine("Using built assembly: " + dllArg);
+                        var candidateDir = fxDirs.OrderByDescending(d => d).First();
+                        var dlls = Directory.GetFiles(candidateDir, "*.dll");
+                        if (dlls.Length > 0)
+                        {
+                            dllArg = dlls[0];
+                            Console.WriteLine("Using built assembly: " + dllArg);
+                        }
                     }
                 }
             }
@@ -110,35 +116,8 @@ namespace DtoToDartGenerator
             if (!File.Exists(dll))
             {
                 Console.WriteLine($"Assembly not found: {dll}");
-                Console.WriteLine("Attempting to help: searching for any dll under parent directories (this may take a moment)...");
-                try
-                {
-                    var start = Directory.GetCurrentDirectory();
-                    var root = start;
-                    for (int i = 0; i < 6; i++)
-                    {
-                        var tryDir = Path.GetFullPath(Path.Combine(start, string.Concat(Enumerable.Repeat("..\\", i))));
-                        if (Directory.Exists(tryDir)) root = tryDir;
-                    }
-
-                    var found = Directory.EnumerateFiles(root, "*.dll", SearchOption.AllDirectories)
-                        .FirstOrDefault(p => p.IndexOf("SearchEngine", StringComparison.OrdinalIgnoreCase) >= 0);
-                    if (found != null)
-                    {
-                        Console.WriteLine("Found candidate assembly: " + found);
-                        dll = found;
-                    }
-                    else
-                    {
-                        Console.WriteLine("No candidate assembly found. Build the DTO project and/or update the config with the correct path to the dll.");
-                        return 2;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Search failed: " + ex.Message);
-                    return 2;
-                }
+                Console.WriteLine("Please provide a valid path to the assembly or update dto-to-dart.config.json");
+                return 2;
             }
 
             Directory.CreateDirectory(outDir);

@@ -1,4 +1,4 @@
-# NuGet Package Publishing Checklist
+﻿# NuGet Package Publishing Checklist
 
 ## ? Files Created/Modified
 
@@ -121,7 +121,7 @@ Consider semantic versioning:
 
 ## ?? Next Steps
 
-1. Update author info in `.csproj` ? (Already done)
+1. Update author info in `.csproj` ✅ (Already done)
 2. Test locally
 3. Create NuGet.org account
 4. Publish version 1.0.0

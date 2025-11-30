@@ -13,6 +13,9 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+# DtoToDartGenerator - exclude personal config
+dto-to-dart.config.json
+
 # Mono auto generated files
 mono_crash.*
 

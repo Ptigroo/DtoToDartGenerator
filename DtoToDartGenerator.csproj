@@ -8,7 +8,7 @@
     
     <!-- NuGet Package Properties -->
     <PackageId>DtoToDartGenerator</PackageId>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Authors>Gaspard de Villenfagne</Authors>
     <Company>Ptigroo</Company>
     <Description>Automatically generates Dart data classes from .NET DTOs with JSON serialization support. Integrates with MSBuild to generate Dart files on every build.</Description>

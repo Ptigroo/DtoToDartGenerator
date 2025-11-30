@@ -4,25 +4,20 @@ A .NET tool that automatically generates Dart data classes from .NET DTOs with J
 
 ## Quick Start
 
-### 1. Install the global tool
-```bash
-dotnet tool install -g DtoToDartGenerator
-```
-
-### 2. Add to your DTO class library
+### 1. Add to your DTO class library
 ```bash
 dotnet add package DtoToDartGenerator
 ```
 
 Dart files will be automatically generated after each build to the `generated_dart` folder.
 
-## Customization preferred
+## Customization
 
-Customize the output directory in your `.csproj` using relative path vy adding  <DartOutputDir> in your propertyGroup:
+Customize the output directory in your `.csproj` using relative path by adding `<DartOutputDir>` in your `PropertyGroup`:
 
 ```xml
 <PropertyGroup>
-    <DartOutputDir>..\..\..\search_engine_front\lib\models</DartOutputDir>
+    <DartOutputDir>../flutter_app/lib/models</DartOutputDir>
 </PropertyGroup>
 ```
 

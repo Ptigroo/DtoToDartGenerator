@@ -1,0 +1,4 @@
+{
+  "AssemblyPath": "path/to/your/assembly.dll",
+  "OutputDir": "path/to/output/directory"
+}
