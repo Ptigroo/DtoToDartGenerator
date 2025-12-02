@@ -12,7 +12,7 @@ permissions:
 jobs:
   auto-fix:
     # Only run if the issue title starts with "auto" (case-insensitive)
-    if: startsWith(toLower(github.event.issue.title), 'auto')
+    if: startsWith(github.event.issue.title, 'auto')
     runs-on: ubuntu-latest
 
     steps:
