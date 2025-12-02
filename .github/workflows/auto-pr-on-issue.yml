@@ -48,12 +48,6 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Create working branch
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b "${{ steps.issue.outputs.branch_name }}"
-
       - name: Create plan file
         env:
           ISSUE_NUMBER: ${{ steps.issue.outputs.issue_number }}
@@ -142,21 +136,13 @@ jobs:
 
           echo "[${TIMESTAMP}] Issue #${ISSUE_NUMBER}: ${ISSUE_TITLE} - Branch: ${BRANCH_NAME}" >> .github/auto-fix/CHANGELOG.log
 
-      - name: Commit changes
-        run: |
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Auto-fix: scaffold for issue #${{ steps.issue.outputs.issue_number }}"
-          fi
-
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ steps.issue.outputs.branch_name }}
           base: master
+          commit-message: "Auto-fix: scaffold for issue #${{ steps.issue.outputs.issue_number }}"
           title: "Auto-fix: ${{ steps.issue.outputs.issue_title }}"
           body: |
             ## Auto-Generated Pull Request
