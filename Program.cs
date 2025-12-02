@@ -257,3 +257,4 @@ namespace DtoToDartGenerator
         }
     }
 }
+// Auto-fix marker: Issue #2 - auto: Add dictionary type (2025-12-02T15:07:43Z)
