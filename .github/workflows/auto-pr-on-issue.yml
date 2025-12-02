@@ -38,8 +38,10 @@ jobs:
           echo "issue_number=$ISSUE_NUMBER" >> "$GITHUB_OUTPUT"
           echo "branch_name=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
 
-          # Store body to a file to preserve multiline content
-          echo "$ISSUE_BODY" > /tmp/issue_body.txt
+          # Store body to a secure temp file to preserve multiline content
+          BODY_FILE=$(mktemp)
+          echo "$ISSUE_BODY" > "$BODY_FILE"
+          echo "body_file=$BODY_FILE" >> "$GITHUB_OUTPUT"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -56,6 +58,7 @@ jobs:
         env:
           ISSUE_NUMBER: ${{ steps.issue.outputs.issue_number }}
           ISSUE_TITLE: ${{ steps.issue.outputs.issue_title }}
+          BODY_FILE: ${{ steps.issue.outputs.body_file }}
         run: |
           mkdir -p .github/auto-fix
 
@@ -72,7 +75,7 @@ jobs:
           EOF
 
           # Append issue body preserving content
-          cat /tmp/issue_body.txt >> ".github/auto-fix/${ISSUE_NUMBER}-PLAN.md"
+          cat "$BODY_FILE" >> ".github/auto-fix/${ISSUE_NUMBER}-PLAN.md"
 
           cat >> ".github/auto-fix/${ISSUE_NUMBER}-PLAN.md" << 'EOF'
 
@@ -142,7 +145,11 @@ jobs:
       - name: Commit changes
         run: |
           git add -A
-          git commit -m "Auto-fix: scaffold for issue #${{ steps.issue.outputs.issue_number }}"
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-fix: scaffold for issue #${{ steps.issue.outputs.issue_number }}"
+          fi
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
