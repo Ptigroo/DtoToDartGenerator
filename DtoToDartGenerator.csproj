@@ -13,8 +13,8 @@
     <Company>Ptigroo</Company>
     <Description>Automatically generates Dart data classes from .NET DTOs with JSON serialization support. Integrates with MSBuild to generate Dart files on every build.</Description>
     <PackageTags>dart;dto;generator;code-generation;msbuild</PackageTags>
-    <PackageProjectUrl>https://github.com/Ptigroo/PocketLawyer</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Ptigroo/PocketLawyer</RepositoryUrl>
+    <PackageProjectUrl>https://https://github.com/Ptigroo/DtoToDartGenerator</PackageProjectUrl>
+    <RepositoryUrl>https://https://github.com/Ptigroo/DtoToDartGenerator</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
