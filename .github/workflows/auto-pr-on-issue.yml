@@ -231,6 +231,18 @@ jobs:
           echo "Or enable automatic implementation by:"
           echo "1. Adding AI API keys to repository secrets"
           echo "2. Extending this workflow with AI integration"
+
+      - name: Run AI implementation script
+        env:
+          ISSUE_NUMBER: ${{ steps.issue.outputs.issue_number }}
+          ISSUE_TITLE: ${{ steps.issue.outputs.issue_title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "🤖 Running AI implementation script..."
+          node .github/scripts/ai-implement.js || echo "AI implementation not available, use Copilot Workspace"
           
       - name: Create AI implementation guide
         env:
