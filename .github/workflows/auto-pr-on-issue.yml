@@ -153,9 +153,9 @@ jobs:
           ## File Structure
           EOF_CONTEXT
           
-          # Add repository tree (limited depth)
-          tree -L 2 -I 'bin|obj|node_modules' . >> ".github/auto-fix/${ISSUE_NUMBER}-CONTEXT.md" 2>/dev/null || \
-          find . -maxdepth 2 -type f -not -path '*/\.*' | head -20 >> ".github/auto-fix/${ISSUE_NUMBER}-CONTEXT.md"
+          # Add repository tree (limited depth) - exclude sensitive directories
+          tree -L 2 -I 'bin|obj|node_modules|.git' . >> ".github/auto-fix/${ISSUE_NUMBER}-CONTEXT.md" 2>/dev/null || \
+          find . -maxdepth 2 -type f -not -path '*/\.*' -not -path '*/.git/*' -not -path '*/bin/*' -not -path '*/obj/*' | head -20 >> ".github/auto-fix/${ISSUE_NUMBER}-CONTEXT.md"
           
           echo "" >> ".github/auto-fix/${ISSUE_NUMBER}-CONTEXT.md"
           echo "## Key Files" >> ".github/auto-fix/${ISSUE_NUMBER}-CONTEXT.md"
@@ -196,11 +196,13 @@ jobs:
           # Option 1: Try GitHub Copilot CLI
           if command -v gh >/dev/null 2>&1; then
             echo "GitHub CLI available, checking for Copilot extension..."
-            if gh extension list 2>/dev/null | grep -q copilot; then
-              echo "Copilot extension found!"
-              AI_AVAILABLE=true
-            else
-              echo "Copilot extension not installed. Install with: gh extension install github/gh-copilot"
+            if gh extension list 2>/dev/null | grep -q copilot || true; then
+              if gh extension list 2>/dev/null | grep copilot; then
+                echo "Copilot extension found!"
+                AI_AVAILABLE=true
+              else
+                echo "Copilot extension not installed. Install with: gh extension install github/gh-copilot"
+              fi
             fi
           fi
           
@@ -242,6 +244,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           echo "🤖 Running AI implementation script..."
+          chmod +x .github/scripts/ai-implement.js 2>/dev/null || true
           node .github/scripts/ai-implement.js || echo "AI implementation not available, use Copilot Workspace"
           
       - name: Create AI implementation guide
@@ -373,9 +376,7 @@ jobs:
           base: master
           commit-message: "Auto-implementation: preparing AI-powered fix for issue #${{ steps.issue.outputs.issue_number }}"
           title: "Auto-fix: ${{ steps.issue.outputs.issue_title }}"
-          labels: |
-            auto-fix
-            copilot:all
+          labels: auto-fix
           body: |
             ## 🤖 Auto-Implementation Pull Request
 
@@ -410,11 +411,12 @@ jobs:
             - Create commits automatically
             - Sync changes back to this PR
 
-            #### Option 2: GitHub Copilot for Pull Requests (Automatic suggestions in comments)
+            #### Option 2: GitHub Copilot for Pull Requests (May provide inline suggestions)
             
-            This PR is labeled with `copilot:all` to enable GitHub Copilot to provide code suggestions.
-            - Copilot will analyze the issue and suggest implementations in PR comments
-            - Review and apply the suggestions as they appear
+            GitHub Copilot for Pull Requests may automatically analyze and suggest implementations.
+            - Check PR comments for Copilot's suggestions
+            - Review and apply suggestions if they appear
+            - Mark PR as ready for review after implementation
             
             #### Option 3: Manual Implementation
             
@@ -426,22 +428,24 @@ jobs:
 
             ### 💡 For Repository Maintainers
 
-            To enable fully automatic implementation:
-            1. Add AI API keys to repository secrets (optional)
-            2. Extend the workflow with AI integration
-            3. See [Implementation Guide](.github/auto-fix/${{ steps.issue.outputs.issue_number }}-IMPLEMENTATION-GUIDE.md)
+            To enable fully automatic implementation within the workflow:
+            1. Add AI API keys to repository secrets (OPENAI_API_KEY or ANTHROPIC_API_KEY)
+            2. Extend `.github/scripts/ai-implement.js` with actual API integration
+            3. See [Implementation Guide](.github/auto-fix/${{ steps.issue.outputs.issue_number }}-IMPLEMENTATION-GUIDE.md) for details
 
             ### 🎯 Expected Outcome
 
-            When implementation is complete, this PR should contain code changes that:
-            - Fully address the requirements in issue #${{ steps.issue.outputs.issue_number }}
-            - Follow existing code patterns and conventions
-            - Include tests if applicable
-            - Update documentation if needed
+            After implementation (via Copilot Workspace or manual), this PR should contain:
+            - ✅ Code changes that fully address issue #${{ steps.issue.outputs.issue_number }}
+            - ✅ Code following existing patterns and conventions
+            - ✅ Tests if applicable
+            - ✅ Updated documentation if needed
+            
+            **Once implementation is complete, mark this PR as ready for review.**
 
             ---
             **Closes #${{ steps.issue.outputs.issue_number }}**
             
-            *🤖 This PR was automatically generated. Use GitHub Copilot Workspace for automatic implementation.*
-          draft: false
+            *🤖 This PR was automatically generated. Use GitHub Copilot Workspace for automatic implementation, then mark as ready for review.*
+          draft: true
           delete-branch: false
