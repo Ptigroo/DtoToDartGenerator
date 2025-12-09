@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /**
  * AI Implementation Script
  * 

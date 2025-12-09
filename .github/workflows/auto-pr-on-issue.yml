@@ -173,7 +173,6 @@ jobs:
           fi
 
       - name: Attempt AI implementation
-        id: ai_implementation
         env:
           ISSUE_NUMBER: ${{ steps.issue.outputs.issue_number }}
           ISSUE_TITLE: ${{ steps.issue.outputs.issue_title }}
@@ -212,10 +211,9 @@ jobs:
             echo "Note: Actual implementation requires additional integration code"
           fi
           
-          # For now, create a marker that implementation was attempted
+          # Log AI implementation status
           if [ "$AI_AVAILABLE" = "true" ]; then
             echo "AI implementation capability detected"
-            echo "implemented=partial" >> "$GITHUB_OUTPUT"
           else
             echo "No AI implementation capability available"
             echo "This workflow can be extended with:"
@@ -223,7 +221,6 @@ jobs:
             echo "2. OpenAI/Anthropic API integration"
             echo "3. Custom AI coding agent"
             echo ""
-            echo "implemented=manual_needed" >> "$GITHUB_OUTPUT"
           fi
           
           echo ""
@@ -244,7 +241,6 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           echo "🤖 Running AI implementation script..."
-          chmod +x .github/scripts/ai-implement.js 2>/dev/null || true
           node .github/scripts/ai-implement.js || echo "AI implementation not available, use Copilot Workspace"
           
       - name: Create AI implementation guide
@@ -376,7 +372,8 @@ jobs:
           base: master
           commit-message: "Auto-implementation: preparing AI-powered fix for issue #${{ steps.issue.outputs.issue_number }}"
           title: "Auto-fix: ${{ steps.issue.outputs.issue_title }}"
-          labels: auto-fix
+          labels: |
+            auto-fix
           body: |
             ## 🤖 Auto-Implementation Pull Request
 

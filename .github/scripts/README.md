@@ -167,12 +167,15 @@ node .github/scripts/ai-implement.js
 
 ### Dependencies
 
-If you extend this script with AI APIs, add a `package.json` in `.github/scripts/`:
+If you extend this script with AI APIs, you'll need to add dependencies and update the workflow.
+
+**Step 1:** Create a `package.json` in `.github/scripts/`:
 
 ```json
 {
   "name": "auto-fix-scripts",
   "version": "1.0.0",
+  "private": true,
   "dependencies": {
     "openai": "^4.0.0",
     "@anthropic-ai/sdk": "^0.9.0"
@@ -180,14 +183,23 @@ If you extend this script with AI APIs, add a `package.json` in `.github/scripts
 }
 ```
 
-Then update the workflow to install dependencies before running the script:
+**Step 2:** Update the workflow (`.github/workflows/auto-pr-on-issue.yml`) to install dependencies before running the script.
+
+Add this step before the "Run AI implementation script" step:
 
 ```yaml
-- name: Install script dependencies
+- name: Install AI script dependencies
   run: |
-    cd .github/scripts
-    npm install
+    if [ -f .github/scripts/package.json ]; then
+      cd .github/scripts
+      npm install
+      echo "Dependencies installed"
+    else
+      echo "No package.json found, skipping dependency installation"
+    fi
 ```
+
+This ensures dependencies are only installed when the package.json exists.
 
 ## Contributing
 
