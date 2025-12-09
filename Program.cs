@@ -257,3 +257,4 @@ namespace DtoToDartGenerator
         }
     }
 }
+// Auto-fix marker: Issue #6 - auto: Parse only the classes ending with their name ending with Dto (2025-12-09T14:29:00Z)
