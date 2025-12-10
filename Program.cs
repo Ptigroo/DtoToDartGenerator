@@ -133,7 +133,7 @@ namespace DtoToDartGenerator
                 return 3;
             }
 
-            var types = asm.GetTypes().Where(t => t.IsClass && t.IsPublic && t.Namespace != null);
+            var types = asm.GetTypes().Where(t => t.IsClass && t.IsPublic && t.Namespace != null && t.Name.EndsWith("Dto", StringComparison.OrdinalIgnoreCase));
 
             foreach (var type in types)
             {
